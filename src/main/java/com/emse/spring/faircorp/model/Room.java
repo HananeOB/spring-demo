@@ -20,12 +20,16 @@ public class Room {
     @OneToMany(mappedBy="room")
     private Set<Light> light;
 
+    @ManyToOne
+    private Building building;
+
     public Room(){
 
     }
-    public Room( String s, Integer f){
+    public Room( String s, Integer f, Building building){
         this.Floor = f;
         this.name = s;
+        this.building = building;
 
     }
 

@@ -19,9 +19,16 @@ public class Light {
     private Room room ;
 
     public Light() {
-
     }
 
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
 
     public Light(Integer level, Status status, Room room) {
         this.level = level;
