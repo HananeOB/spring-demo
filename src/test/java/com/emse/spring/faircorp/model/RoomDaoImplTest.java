@@ -21,19 +21,29 @@ class RoomDaoImplTest {
     @Test
     public void shouldFindRooms() {
         Assertions.assertThat(RoomDao.findRoomByName("Room1"))
-                .hasSize(1)
-                .extracting("id", "name")
-                .containsExactly(Tuple.tuple(-10L, "Room1"));
+                .hasSize(3)
+                ;
 
     }
     @Test
     public void shouldFindRoomsLight() {
 
         Assertions.assertThat(RoomDao.findRoomLight(-10))
-                .hasSize(2)
+                .hasSize(1)
                 .extracting("room.id")
-                .containsExactly(-10L,-10L);
+                .containsExactly(-10L);
 
     }
+
+    @Test
+    public void shouldFindAllRoomsID() {
+
+        Assertions.assertThat(RoomDao.findAllRoomId())
+                .hasSize(2);
+
+
+    }
+
+
 
 }

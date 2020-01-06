@@ -26,8 +26,8 @@ public class Light {
         return room;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setRoom(long room) {
+        this.room.setId(room) ;
     }
 
     public Light(Integer level, Status status, Room room) {

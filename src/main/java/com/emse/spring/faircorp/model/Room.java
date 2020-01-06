@@ -20,16 +20,15 @@ public class Room {
     @OneToMany(mappedBy="room")
     private Set<Light> light;
 
-    @ManyToOne
-    private Building building;
+
 
     public Room(){
 
     }
-    public Room( String s, Integer f, Building building){
+    public Room( String s, Integer f){
         this.Floor = f;
         this.name = s;
-        this.building = building;
+
 
     }
 
@@ -64,4 +63,8 @@ public class Room {
     public void setLight(Set<Light> light) {
         this.light = light;
     }
+
+
+
+
 }

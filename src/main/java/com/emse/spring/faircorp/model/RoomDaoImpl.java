@@ -11,9 +11,9 @@ public class RoomDaoImpl implements RoomDaoCustom {
         private EntityManager em;
 
         @Override
-        public List<Room> findRoomByName(String name) {
-            String jpql = "select r from Room r where r.name = :value";
-            return em.createQuery(jpql, Room.class)
+        public List<String> findRoomByName(String name) {
+            String jpql = "select r.name from Room as r where r.name = :value";
+            return em.createQuery(jpql, String.class)
                     .setParameter("value", name)
                     .getResultList();
         }
@@ -24,5 +24,15 @@ public class RoomDaoImpl implements RoomDaoCustom {
                     .setParameter("id", id )
                     .getResultList();
         }
+
+
+        @Override
+        public List<Long> findAllRoomId(){
+            String jpql = "select r.id from Room r";
+            return em.createQuery(jpql, Long.class)
+                    .getResultList();
+        }
+
+
     }
 

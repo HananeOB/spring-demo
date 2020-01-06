@@ -11,8 +11,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/api/lights")
+@RequestMapping("/api/")
 @Transactional
 public class LightController {
 
@@ -22,7 +23,7 @@ public class LightController {
     private RoomDao roomDao;
 
 
-    @GetMapping
+    @GetMapping(path = "/lights")
     public List<LightDTO> findAll() {
         return lightDao.findAll()
                 .stream()
@@ -30,17 +31,53 @@ public class LightController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/lights/{id}")
     public LightDTO findById(@PathVariable Long id) {
         return lightDao.findById(id).map(light -> new LightDTO(light)).orElse(null);
     }
 
-    @PutMapping(path = "/{id}/switch")
-    public LightDTO switchStatus(@PathVariable Long id) {
+
+
+
+
+
+    @PutMapping(path = "lights/{id}/switch")
+    public List<LightDTO> switchStatusWeb(@PathVariable Long id) {
+        Light light = lightDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        light.setStatus(light.getStatus() == Status.ON ? Status.OFF: Status.ON);
+        return lightDao.findAll()
+                .stream()
+                .map(LightDTO::new)
+                .collect(Collectors.toList());
+    }
+    @PutMapping(path = "lights/{id}/{level}")
+    public List<LightDTO> switchLevelWeb(@PathVariable Long id,@PathVariable Integer level) {
+        Light light = lightDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        light.setLevel(level);
+        return lightDao.findAll()
+                .stream()
+                .map(LightDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @PutMapping(path = "Lights/{id}/switch")
+    public LightDTO switchStatusAndroid(@PathVariable Long id) {
         Light light = lightDao.findById(id).orElseThrow(IllegalArgumentException::new);
         light.setStatus(light.getStatus() == Status.ON ? Status.OFF: Status.ON);
         return new LightDTO(light);
     }
+    @PutMapping(path = "Lights/{id}/{level}")
+    public LightDTO switchLevelAndroid(@PathVariable Long id,@PathVariable Integer level) {
+        Light light = lightDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        light.setLevel(level);
+        return new LightDTO(light);
+    }
+
+
+
+
+
+
 
     @PostMapping
     public LightDTO create(@RequestBody LightDTO dto) {
@@ -54,6 +91,8 @@ public class LightController {
         } else {
             light.setLevel(dto.getLevel());
             light.setStatus(dto.getStatus());
+            light.setRoom(dto.getRoom());
+
             lightDao.save(light);
         }
 
