@@ -4,6 +4,7 @@ import com.emse.spring.faircorp.model.Light;
 import com.emse.spring.faircorp.model.LightDao;
 import com.emse.spring.faircorp.model.RoomDao;
 import com.emse.spring.faircorp.model.Status;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +46,21 @@ public class LightController {
     public List<LightDTO> switchStatusWeb(@PathVariable Long id) {
         Light light = lightDao.findById(id).orElseThrow(IllegalArgumentException::new);
         light.setStatus(light.getStatus() == Status.ON ? Status.OFF: Status.ON);
+        MqttPublishModel messagePublishModel = new MqttPublishModel();
+        messagePublishModel.setTopic("LightAHC\\"+light.getId().toString()+"\\status");
+        messagePublishModel.setMessage(light.getStatus().toString());
+        messagePublishModel.setQos(0);
+        messagePublishModel.setRetained(true);
+        MqttMessage mqttMessage = new MqttMessage(messagePublishModel.getMessage().getBytes());
+        mqttMessage.setQos(messagePublishModel.getQos());
+        mqttMessage.setRetained(messagePublishModel.getRetained());
+
+        try {
+            mqttTry.getInstance().publish(messagePublishModel.getTopic(), mqttMessage);
+        } catch (org.eclipse.paho.client.mqttv3.MqttException e) {
+            e.printStackTrace();
+        }
+
         return lightDao.findAll()
                 .stream()
                 .map(LightDTO::new)
@@ -54,6 +70,21 @@ public class LightController {
     public List<LightDTO> switchLevelWeb(@PathVariable Long id,@PathVariable Integer level) {
         Light light = lightDao.findById(id).orElseThrow(IllegalArgumentException::new);
         light.setLevel(level);
+        MqttPublishModel messagePublishModel = new MqttPublishModel();
+        messagePublishModel.setTopic("LightAHC\\"+light.getId().toString()+"\\level");
+        messagePublishModel.setMessage(light.getLevel().toString());
+        messagePublishModel.setQos(0);
+        messagePublishModel.setRetained(true);
+        MqttMessage mqttMessage = new MqttMessage(messagePublishModel.getMessage().getBytes());
+        mqttMessage.setQos(messagePublishModel.getQos());
+        mqttMessage.setRetained(messagePublishModel.getRetained());
+
+        try {
+            mqttTry.getInstance().publish(messagePublishModel.getTopic(), mqttMessage);
+            mqttTry.getInstance().disconnect();
+        } catch (org.eclipse.paho.client.mqttv3.MqttException e) {
+            e.printStackTrace();
+        }
         return lightDao.findAll()
                 .stream()
                 .map(LightDTO::new)
@@ -64,12 +95,42 @@ public class LightController {
     public LightDTO switchStatusAndroid(@PathVariable Long id) {
         Light light = lightDao.findById(id).orElseThrow(IllegalArgumentException::new);
         light.setStatus(light.getStatus() == Status.ON ? Status.OFF: Status.ON);
+        MqttPublishModel messagePublishModel = new MqttPublishModel();
+        messagePublishModel.setTopic("LightAHC\\"+light.getId().toString()+"\\status");
+        messagePublishModel.setMessage(light.getStatus().toString());
+        messagePublishModel.setQos(0);
+        messagePublishModel.setRetained(true);
+        MqttMessage mqttMessage = new MqttMessage(messagePublishModel.getMessage().getBytes());
+        mqttMessage.setQos(messagePublishModel.getQos());
+        mqttMessage.setRetained(messagePublishModel.getRetained());
+
+        try {
+            mqttTry.getInstance().publish(messagePublishModel.getTopic(), mqttMessage);
+        } catch (org.eclipse.paho.client.mqttv3.MqttException e) {
+            e.printStackTrace();
+        }
+
+
         return new LightDTO(light);
     }
     @PutMapping(path = "Lights/{id}/{level}")
     public LightDTO switchLevelAndroid(@PathVariable Long id,@PathVariable Integer level) {
         Light light = lightDao.findById(id).orElseThrow(IllegalArgumentException::new);
         light.setLevel(level);
+        MqttPublishModel messagePublishModel = new MqttPublishModel();
+        messagePublishModel.setTopic("LightAHC\\"+light.getId().toString()+"\\level");
+        messagePublishModel.setMessage(light.getLevel().toString());
+        messagePublishModel.setQos(0);
+        messagePublishModel.setRetained(true);
+        MqttMessage mqttMessage = new MqttMessage(messagePublishModel.getMessage().getBytes());
+        mqttMessage.setQos(messagePublishModel.getQos());
+        mqttMessage.setRetained(messagePublishModel.getRetained());
+
+        try {
+            mqttTry.getInstance().publish(messagePublishModel.getTopic(), mqttMessage);
+        } catch (org.eclipse.paho.client.mqttv3.MqttException e) {
+            e.printStackTrace();
+        }
         return new LightDTO(light);
     }
 

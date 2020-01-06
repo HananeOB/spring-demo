@@ -17,10 +17,13 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven {
+		url "https://repo.eclipse.org/content/repositories/paho-releases/"
+	}
 }
 
 dependencies {
-
+	implementation('org.springframework.integration:spring-integration-mqtt:5.2.0.RELEASE')
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation('com.h2database:h2')
